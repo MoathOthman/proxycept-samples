@@ -6,7 +6,12 @@ import Security
 // is the host Mac's loopback, so it reaches a locally-running proxy worker.
 private let kDefaultProxyHost = "127.0.0.1"
 private let kDefaultProxyPort = 19345
-private let kDefaultTargetURL = "https://example.com"
+// A real API (returns a short plaintext "zen" quote). Through Proxycept you'll see either the
+// real quote (captured) or — with an intercept/modify rule — a tampered body.
+private let kDefaultTargetURL = "https://api.github.com/zen"
+// Edge (prod) proxies require per-profile auth; leave blank for a local no-auth proxy.
+private let kDefaultProxyUser = ""
+private let kDefaultProxyPass = ""
 
 struct Result: Identifiable {
     let id = UUID()
@@ -20,10 +25,15 @@ struct Result: Identifiable {
 final class DemoModel: NSObject, ObservableObject, URLSessionDelegate {
     @Published var proxyHost = kDefaultProxyHost
     @Published var proxyPort = String(kDefaultProxyPort)
+    @Published var proxyUser = kDefaultProxyUser
+    @Published var proxyPass = kDefaultProxyPass
     @Published var target = kDefaultTargetURL
     @Published var loading = false
     @Published var result: Result?
     @Published var error: String?
+
+    // Plain copies the (nonisolated) URLSession delegate can read for proxy auth.
+    nonisolated(unsafe) private var creds: (user: String, pass: String) = ("", "")
 
     // Captured from the TLS handshake so the UI can show *who signed the cert* —
     // if traffic is intercepted, example.com's leaf is signed by "Proxy Control CA".
@@ -34,11 +44,12 @@ final class DemoModel: NSObject, ObservableObject, URLSessionDelegate {
             error = "Bad URL or port"; return
         }
         loading = true; error = nil; result = nil; lastIssuer = "(unknown)"
+        creds = (proxyUser, proxyPass)
 
         let config = URLSessionConfiguration.ephemeral
         // Route everything through the Proxycept proxy. HTTPS is tunneled via CONNECT;
         // the string keys cover the HTTPS case on iOS (no kCF* HTTPS constants there).
-        config.connectionProxyDictionary = [
+        var proxyDict: [AnyHashable: Any] = [
             kCFNetworkProxiesHTTPEnable as String: 1,
             kCFNetworkProxiesHTTPProxy as String: proxyHost,
             kCFNetworkProxiesHTTPPort as String: port,
@@ -46,6 +57,12 @@ final class DemoModel: NSObject, ObservableObject, URLSessionDelegate {
             "HTTPSProxy": proxyHost,
             "HTTPSPort": port,
         ]
+        if !proxyUser.isEmpty {
+            // Edge proxies require per-profile auth; also handled in the delegate's challenge.
+            proxyDict[kCFProxyUsernameKey as String] = proxyUser
+            proxyDict[kCFProxyPasswordKey as String] = proxyPass
+        }
+        config.connectionProxyDictionary = proxyDict
         let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         let task = session.dataTask(with: url) { [weak self] data, response, err in
             Task { @MainActor in
@@ -77,6 +94,12 @@ final class DemoModel: NSObject, ObservableObject, URLSessionDelegate {
         didReceive challenge: URLAuthenticationChallenge,
         completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
     ) {
+        // Proxy auth (edge profiles): answer with the per-profile credentials.
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPBasic,
+           !creds.user.isEmpty {
+            completionHandler(.useCredential, URLCredential(user: creds.user, password: creds.pass, persistence: .forSession))
+            return
+        }
         if let trust = challenge.protectionSpace.serverTrust,
            let chain = SecTrustCopyCertificateChain(trust) as? [SecCertificate],
            let leaf = chain.first {
@@ -100,6 +123,8 @@ struct ContentView: View {
                 Section("Proxycept proxy") {
                     TextField("Host", text: $model.proxyHost).autocorrectionDisabled()
                     TextField("Port", text: $model.proxyPort).keyboardType(.numberPad)
+                    TextField("Username (edge only)", text: $model.proxyUser).autocorrectionDisabled().textInputAutocapitalization(.never)
+                    SecureField("Password (edge only)", text: $model.proxyPass)
                 }
                 Section("Request") {
                     TextField("URL", text: $model.target).autocorrectionDisabled().textInputAutocapitalization(.never)

@@ -28,7 +28,12 @@ import java.security.cert.X509Certificate
 // Point these at your Proxycept proxy (the profile's Connection tab gives host/port).
 private const val DEFAULT_PROXY_HOST = "10.0.2.2"
 private const val DEFAULT_PROXY_PORT = "19345"
-private const val DEFAULT_TARGET = "https://example.com"
+// A real API (returns a short plaintext "zen" quote). With an intercept/modify rule you'll
+// see a tampered body instead — proof the modification reached the device.
+private const val DEFAULT_TARGET = "https://api.github.com/zen"
+// Edge (prod) proxies require per-profile auth; leave blank for a local no-auth proxy.
+private const val DEFAULT_PROXY_USER = ""
+private const val DEFAULT_PROXY_PASS = ""
 
 data class FetchResult(
     val statusLine: String,
@@ -48,11 +53,22 @@ class MainActivity : ComponentActivity() {
         host: String,
         port: Int,
         target: String,
+        user: String,
+        pass: String,
         onResult: (Result<FetchResult>) -> Unit,
     ) {
         lifecycleScope.launch {
             val r = withContext(Dispatchers.IO) {
                 runCatching {
+                    // Edge proxies require per-profile auth; answer the proxy's 407 challenge.
+                    if (user.isNotEmpty()) {
+                        java.net.Authenticator.setDefault(object : java.net.Authenticator() {
+                            override fun getPasswordAuthentication(): java.net.PasswordAuthentication? =
+                                if (requestorType == RequestorType.PROXY)
+                                    java.net.PasswordAuthentication(user, pass.toCharArray()) else null
+                        })
+                        System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "")
+                    }
                     val proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(host, port))
                     val conn = URL(target).openConnection(proxy) as HttpsURLConnection
                     conn.connectTimeout = 15000
@@ -79,10 +95,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun DemoScreen(
-    fetch: (String, Int, String, (Result<FetchResult>) -> Unit) -> Unit,
+    fetch: (String, Int, String, String, String, (Result<FetchResult>) -> Unit) -> Unit,
 ) {
     var host by remember { mutableStateOf(DEFAULT_PROXY_HOST) }
     var port by remember { mutableStateOf(DEFAULT_PROXY_PORT) }
+    var user by remember { mutableStateOf(DEFAULT_PROXY_USER) }
+    var pass by remember { mutableStateOf(DEFAULT_PROXY_PASS) }
     var target by remember { mutableStateOf(DEFAULT_TARGET) }
     var loading by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<FetchResult?>(null) }
@@ -90,7 +108,7 @@ fun DemoScreen(
 
     fun run() {
         loading = true; result = null; error = null
-        fetch(host, port.toIntOrNull() ?: 0, target) { r ->
+        fetch(host, port.toIntOrNull() ?: 0, target, user, pass) { r ->
             loading = false
             r.onSuccess { result = it }.onFailure { error = it.message ?: it.toString() }
         }
@@ -110,6 +128,8 @@ fun DemoScreen(
                 port, { port = it }, label = { Text("Proxy port") }, singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth(),
             )
+            OutlinedTextField(user, { user = it }, label = { Text("Username (edge only)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(pass, { pass = it }, label = { Text("Password (edge only)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(target, { target = it }, label = { Text("URL") }, singleLine = true, modifier = Modifier.fillMaxWidth())
 
             Button(onClick = ::run, enabled = !loading, modifier = Modifier.fillMaxWidth()) {
