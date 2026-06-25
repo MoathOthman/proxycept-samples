@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose draws its own UI; a plain no-action-bar platform theme is enough. -->
+    <style name="Theme.ProxyceptDemo" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

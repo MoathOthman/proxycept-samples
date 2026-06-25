@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Trust the Proxycept CA (bundled in res/raw) in addition to the system store, so the
+     app validates the proxy's MITM'd TLS. Also trusts user-installed CAs for convenience.
+     Replace app/src/main/res/raw/proxycept_ca.pem with YOUR deployment's CA. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+            <certificates src="@raw/proxycept_ca" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
