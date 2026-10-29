@@ -1,5 +1,30 @@
 # Proxycept client samples
 
+## Application logging SDKs: Swift and Kotlin
+
+New source SDKs send categorized **application logs** to a compatible Proxycept app-log
+API. This is separate from the proxy/network samples below: **no VPN, CA certificate or
+proxy configuration is required for log upload**. Integrate the SDK in an app you own;
+it cannot read another app's console output.
+
+| SDK | Integration | Guide |
+| --- | --- | --- |
+| Swift / iOS | Swift Package Manager; repository-root package or `sdks/swift` locally | [Swift SDK](sdks/swift/README.md) |
+| Kotlin / Android | Gradle source module, Android app-private storage | [Kotlin SDK](sdks/kotlin/README.md) |
+
+Use a dedicated **ingestion-only** key, never a personal read/write API token. Both SDKs
+batch asynchronously, bound their offline queues and redact known sensitive patterns
+before spooling. Redaction is defense-in-depth, not a guarantee that arbitrary log text
+contains no personal data. Collect only what is necessary and enable release-build logging
+explicitly. Each SDK folder has its own MIT license; this does not relicense older samples.
+
+**Preview availability:** the logging server feature is default-off and developed/tested
+locally. This source addition does not enable it on hosted production, publish a Maven
+artifact or establish a released Swift package version. Use a locally enabled server and
+follow the respective README for test commands and known platform limits.
+
+---
+
 Official sample apps showing how to point a client at a **[Proxycept](https://proxycept.com)**
 proxy to **capture, intercept, and mock** its HTTP(S) traffic.
 

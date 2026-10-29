@@ -1,0 +1,45 @@
+name: LoopbackDemo
+options:
+  deploymentTarget:
+    iOS: "15.0"
+packages:
+  ProxyceptLogging:
+    path: ../..
+targets:
+  LoopbackDemo:
+    type: application
+    platform: iOS
+    sources:
+      - path: LoopbackDemoApp.swift
+    dependencies:
+      - package: ProxyceptLogging
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.proxycept.logging.loopback-demo
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Connect to the local logging smoke server.
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Proxycept Logging Demo
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    scheme:
+      gatherCoverageData: false
+      testTargets:
+        - LoopbackDemoTests
+  LoopbackDemoTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ../../Tests/ProxyceptLoggingTests
+    dependencies:
+      - target: LoopbackDemo
+      - package: ProxyceptLogging
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.proxycept.logging.loopback-demo.tests
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
