@@ -1,0 +1,9 @@
+.build/
+.swiftpm/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.DS_Store
+
+# Keep the standalone smoke project despite the repository-wide generated-project ignore.
+!Examples/LoopbackDemo/LoopbackDemo.xcodeproj/
