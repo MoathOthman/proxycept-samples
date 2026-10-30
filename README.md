@@ -1,6 +1,6 @@
 # Proxycept client samples
 
-## Application logging SDKs: Swift and Kotlin
+## Application logging SDKs
 
 New source SDKs send categorized **application logs** to a compatible Proxycept app-log
 API. This is separate from the proxy/network samples below: **no VPN, CA certificate or
@@ -11,8 +11,11 @@ it cannot read another app's console output.
 | --- | --- | --- |
 | Swift / iOS | Swift Package Manager; repository-root package or `sdks/swift` locally | [Swift SDK](sdks/swift/README.md) |
 | Kotlin / Android | Gradle source module, Android app-private storage | [Kotlin SDK](sdks/kotlin/README.md) |
+| React Native / iOS + Android | TypeScript API with native mobile logging cores; local source package | [React Native SDK](sdks/react-native/README.md) |
+| Flutter / iOS + Android | Dart worker isolate and native private-storage integration; local path dependency | [Flutter SDK](sdks/flutter/README.md) |
+| Kotlin Multiplatform / Android + iOS + JVM | Shared Kotlin API with platform storage and transport; source Gradle module | [KMP SDK](sdks/kotlin-multiplatform/README.md) |
 
-Use a dedicated **ingestion-only** key, never a personal read/write API token. Both SDKs
+Use a dedicated **ingestion-only** key, never a personal read/write API token. All SDKs
 batch asynchronously, bound their offline queues and redact known sensitive patterns
 before spooling. Redaction is defense-in-depth, not a guarantee that arbitrary log text
 contains no personal data. Collect only what is necessary and enable release-build logging
@@ -22,6 +25,10 @@ explicitly. Each SDK folder has its own MIT license; this does not relicense old
 locally. This source addition does not enable it on hosted production, publish a Maven
 artifact or establish a released Swift package version. Use a locally enabled server and
 follow the respective README for test commands and known platform limits.
+
+React Native, Flutter and KMP are source integrations in the local extension work;
+no npm, pub.dev, Maven or Swift package release is implied. Shared admission
+fixtures and cross-SDK validation guidance live in [`sdks/conformance`](sdks/conformance/README.md).
 
 ---
 

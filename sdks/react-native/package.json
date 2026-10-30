@@ -1,0 +1,52 @@
+{
+  "name": "@proxycept/react-native-logging",
+  "version": "0.1.0",
+  "description": "Explicit React Native application logs with bounded native durable delivery",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "src",
+    "lib",
+    "ios/Core",
+    "ios/Bridge",
+    "android/src/main",
+    "android/build.gradle",
+    "ProxyceptLoggingRN.podspec",
+    "react-native.config.js",
+    "LICENSE",
+    "native-source-provenance.json"
+  ],
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check:native-source": "node scripts/check-native-source.mjs",
+    "smoke:core": "sh scripts/smoke-core.sh",
+    "bundle:example": "npm run build && node scripts/bundle-example.cjs",
+    "prepare:smoke": "sh scripts/prepare-smoke.sh"
+  },
+  "peerDependencies": {
+    "react": "19.1.1",
+    "react-native": "0.82.1"
+  },
+  "devDependencies": {
+    "@react-native/babel-preset": "0.82.1",
+    "@react-native/metro-config": "0.82.1",
+    "@types/react": "19.1.1",
+    "react": "19.1.1",
+    "react-native": "0.82.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MoathOthman/proxycept-samples.git",
+    "directory": "sdks/react-native"
+  },
+  "private": true
+}

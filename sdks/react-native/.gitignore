@@ -1,0 +1,15 @@
+node_modules/
+lib/
+.build/
+.gradle/
+build/
+Pods/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+
+.xcode.env*
+*.xcworkspace/
+*.xcodeproj/
+
+example/ios/main.jsbundle*

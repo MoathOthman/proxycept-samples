@@ -1,0 +1,7 @@
+.gradle/
+.gradle-user-home/
+.konan/
+.kotlin/
+build/
+local.properties
+*.log

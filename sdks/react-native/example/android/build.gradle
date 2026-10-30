@@ -1,0 +1,7 @@
+// Compile harness for the actual RN bridge. Not an emulator app or runtime proof.
+ext.compileSdkVersion = 36
+allprojects {
+    configurations.configureEach {
+        resolutionStrategy.force 'com.facebook.react:react-android:0.82.1'
+    }
+}

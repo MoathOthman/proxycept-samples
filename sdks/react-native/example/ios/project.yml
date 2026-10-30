@@ -1,0 +1,24 @@
+name: ProxyceptRNExample
+options:
+  deploymentTarget:
+    iOS: "15.1"
+targets:
+  ProxyceptRNExample:
+    type: application
+    platform: iOS
+    sources:
+      - AppDelegate.swift
+      - main.jsbundle
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.proxycept.reactnative.example
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Local SDK test configuration and ingest.
+    info:
+      path: Info.plist
+      properties:
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    scheme: {}

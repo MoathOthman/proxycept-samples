@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "description": "Shared schema-v1 scalar admission cases. Rejected attributes must never poison valid neighboring events in an upload batch.",
+  "cases": [
+    {"name": "empty-map", "attributes": {}, "accepted": true},
+    {"name": "all-scalars", "attributes": {"screen": "checkout", "attempt": 1, "guest": true, "optional": null}, "accepted": true},
+    {"name": "positive-boundary", "attributes": {"value": 1e308}, "accepted": true},
+    {"name": "negative-boundary", "attributes": {"value": -1e308}, "accepted": true},
+    {"name": "empty-attribute-name", "attributes": {"": "invalid"}, "accepted": false},
+    {"name": "nested-map", "attributes": {"nested": {"value": "invalid"}}, "accepted": false},
+    {"name": "nested-array", "attributes": {"nested": [1, 2]}, "accepted": false},
+    {"name": "positive-overflow", "attributes": {"value": 1.7976931348623157e308}, "accepted": false},
+    {"name": "negative-overflow", "attributes": {"value": -1.7976931348623157e308}, "accepted": false},
+    {"name": "redaction-does-not-reject", "attributes": {"password": "fixture-secret-do-not-store", "contact": "fixture@example.com"}, "accepted": true}
+  ]
+}
