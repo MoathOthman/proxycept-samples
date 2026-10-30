@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.facebook.react'
+
+react {
+    root = file('../../..')
+    reactNativeDir = file('../../../node_modules/react-native')
+    codegenDir = file('../../../node_modules/@react-native/codegen')
+    entryFile = file('../../runtime-entry.js')
+    // Debug deliberately uses the offline bundle below, never a Metro server.
+    debuggableVariants = ['debug']
+}
+android {
+    namespace 'com.proxycept.reactnative.example'
+    compileSdk 36
+    ndkVersion rootProject.ext.ndkVersion
+    defaultConfig {
+        applicationId 'com.proxycept.reactnative.example'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '1.0'
+    }
+    buildFeatures { buildConfig true }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = '17' }
+    sourceSets.main.assets.srcDir(layout.buildDirectory.dir('generated/proxyceptAssets'))
+}
+dependencies {
+    implementation 'com.facebook.react:react-android'
+    implementation 'com.facebook.react:hermes-android'
+    implementation project(':proxycept-logging')
+}
+def runtimeBundle = tasks.register('bundleRuntimeExample', Exec) {
+    workingDir rootProject.file('../..')
+    commandLine 'node', rootProject.file('scripts/bundle-runtime.cjs').absolutePath,
+        layout.buildDirectory.file('generated/proxyceptAssets/index.android.bundle').get().asFile.absolutePath
+    inputs.file(rootProject.file('../runtime-entry.js'))
+    inputs.dir(rootProject.file('../../lib'))
+    outputs.dir(layout.buildDirectory.dir('generated/proxyceptAssets'))
+    environment.remove('PROXYCEPT_TEST_INGEST_KEY')
+    environment.remove('PROXYCEPT_TEST_DEBUG_SESSION')
+    environment.remove('PROXYCEPT_TEST_SPOOL_DIR')
+}
+tasks.named('preBuild').configure { dependsOn(runtimeBundle) }

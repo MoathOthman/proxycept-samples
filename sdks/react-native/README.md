@@ -13,14 +13,15 @@ Do not infer compatibility with other RN versions or Expo Go. Expo development
 builds require native linking and a rebuilt binary. See [TESTING.md](TESTING.md)
 for the actual typecheck, core, bridge-build and runtime evidence and gaps.
 
-**Verified final framework runtime:** after the empty-correlation and deterministic
-close fixes, React Native 0.82.1 / React 19.1.1 on the iOS 26.2 simulator delivered
-one redacted, committed local-API event through actual bundled JS → native bridge
-→ durable core (app 34). The ephemeral key was revoked. An earlier run's reviewed
-UI screenshot showed `committed=1 queued=0 hermes=true bridgeless=true`.
+**Verified final framework runtime:** after the correlation/close fixes and strict
+configuration-redirect guard, React Native 0.82.1 / React 19.1.1 delivered a
+redacted, committed local-API event through bundled JS → native bridge → durable
+core on both an iOS 26.2 simulator (app 38) and an Android API 36 device (app 39).
+Both keys were revoked. Runtime evidence reports
+`committed=1 queued=0 hermes=true bridgeless=true`.
 Final checks pass: **19 JS tests, 38 Swift tests, 31 JVM tests**, strict concurrency,
-TypeScript and both native bridge builds. Android has JVM/compile evidence;
-**Android framework runtime has not been validated**.
+TypeScript and both native bridge builds. This does not certify minimum OS
+versions, physical iOS Data Protection or OS background/battery behavior.
 
 ## Install locally
 
@@ -167,6 +168,15 @@ permanent key. Server-independent redaction is still required. This is best-effo
 scrubbing, not perfect PII/secret detection; never intentionally log sensitive data.
 
 ## Example and local smoke
+
+`example/android` is a complete RN New Architecture/Hermes local runtime host,
+not just a bridge compile harness. Its pinned build uses Gradle 8.13, AGP 8.12.0,
+Kotlin 2.1.20, JDK 17, SDK 36 and NDK 28.2.13676358. It bundles the same
+credential-free JS entry as iOS; no Metro server is needed at runtime. Build
+`:app:assembleDebug` without credentials, then explicitly run
+`scripts/run-android-runtime.py` with `PROXYCEPT_ANDROID_DEVICE` and
+`PROXYCEPT_ADB` set. Builds never install/launch a device. The operator owns
+temporary forwarding for 18880/18881 and test-key revocation; see TESTING.md.
 
 `example/App.tsx` demonstrates admission/flush/stats and lifecycle-safe cleanup.
 Obtain its `configuration` prop from a runtime credential provider. The

@@ -1,7 +1,8 @@
 # Validation — 2026-10-30
 
-Owned scope: `sdks/kotlin-multiplatform/**` only. No edits to existing Kotlin,
-Swift, Flutter, React Native, root docs or backend source. No commit/publish.
+Validation scope: `sdks/kotlin-multiplatform/**`. Existing Kotlin/Swift SDK
+sources remain unchanged. Local source commits are separate from package
+publication, production deployment and remote review updates.
 
 Build toolchain: Kotlin 2.3.21, Gradle 8.13, Homebrew JDK 17, AGP 8.13.2,
 Android SDK 35, Xcode 26.3 / iOS SDK and simulator runtime 26.2.

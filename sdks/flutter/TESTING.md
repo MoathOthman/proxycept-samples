@@ -62,11 +62,17 @@ Main's harness reported:
   one redacted committed event, synthetic key revoked; temporary adb reverse
   mappings for 18880/18881 were removed by main.
 
-Those native runs precede the saturated-close core fix; their unchanged native
-bridge/wire path is distinct from the subsequently tested shutdown edge. The
-post-fix precompiled Dart core rerun also **passed**: one committed/redacted local
-API event (disposable app 33), spool scrub verified by the harness, key revoked.
-Do not claim a new device rerun from this host core run or build alone.
+Both native integration targets were rebuilt and rerun against the final SDK
+source **after the saturated-close fix**, and both **passed**: iOS Simulator
+(disposable app 35) and physical Android (disposable app 36) each delivered one
+committed, redacted local API event. Both synthetic keys were revoked; main removed
+the Android task's temporary adb port mappings. The Android post-fix runtime log is
+`/private/tmp/proxycept-cross-flutter-android-postfix.log`. The iOS Simulator Data
+Protection metadata remains explicitly **UNVERIFIED**, as described above.
+
+The post-fix precompiled Dart core rerun also **passed**: one committed/redacted
+local API event (disposable app 33), spool scrub verified by the harness, key revoked.
+This host core run is separate from the two post-fix native runtime passes.
 
 Main compiled the kernel before provisioning the runtime key:
 

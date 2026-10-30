@@ -11,8 +11,13 @@ function RuntimeExample({configURL}) {
     let logger;
     (async () => {
       if (configURL !== 'http://127.0.0.1:18881/sdk-test-config') throw new Error('Local config endpoint required');
-      const response = await fetch(configURL, {credentials: 'omit', headers: {'Cache-Control': 'no-store'}});
-      if (!response.ok) throw new Error('Configuration unavailable');
+      const response = await fetch(configURL, {credentials: 'omit', redirect: 'error',
+        headers: {'Cache-Control': 'no-store'}});
+      // RN fetch implementations may ignore redirect mode; reject the final URL
+      // independently, before parsing or using any returned test configuration.
+      if (!response.ok || response.url !== configURL || response.redirected === true) {
+        throw new Error('Configuration unavailable');
+      }
       const input = await response.json();
       if (input.base_url !== 'http://127.0.0.1:18880') throw new Error('Local ingest required');
       logger = await createLogger({baseUrl: input.base_url, ingestToken: input.ingest_key,
