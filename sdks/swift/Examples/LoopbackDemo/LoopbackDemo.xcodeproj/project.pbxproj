@@ -12,6 +12,7 @@
 		8B3DCFC023ED681AD56F5EF0 /* ProxyceptLogging in Frameworks */ = {isa = PBXBuildFile; productRef = CF1A9B52D42E8F04F399D2E4 /* ProxyceptLogging */; };
 		B733C8A7A892E0D45A27A519 /* ConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9CE4117CB9657C1A9B3626 /* ConcurrencyTests.swift */; };
 		CCEA19CA3BD29CD83D0652F9 /* LoopbackDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57DED928CE00B1EB9FA3D95 /* LoopbackDemoApp.swift */; };
+		7A1C3E5F0B2D4F6081A3C5E7 /* RequestTaggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2B4D6F81A3C5E70B1D3F52 /* RequestTaggingTests.swift */; };
 		E7EACBDB3753CBCB7BE57B90 /* ProxyceptLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 615A9C331D3CF892FE39F7FA /* ProxyceptLogging */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		285099D3FCCFAF8816578CE1 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		A92D2BF80548629F950BC71E /* swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = swift; path = ../..; sourceTree = SOURCE_ROOT; };
 		CA9CE4117CB9657C1A9B3626 /* ConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyTests.swift; sourceTree = "<group>"; };
+		9E2B4D6F81A3C5E70B1D3F52 /* RequestTaggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTaggingTests.swift; sourceTree = "<group>"; };
 		D3183CF5F43B90835557C73C /* URLSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTests.swift; sourceTree = "<group>"; };
 		D670F5AE79830D0976A9E679 /* LoopbackDemoTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LoopbackDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E57DED928CE00B1EB9FA3D95 /* LoopbackDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopbackDemoApp.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			children = (
 				CA9CE4117CB9657C1A9B3626 /* ConcurrencyTests.swift */,
 				285099D3FCCFAF8816578CE1 /* LoggerTests.swift */,
+				9E2B4D6F81A3C5E70B1D3F52 /* RequestTaggingTests.swift */,
 				D3183CF5F43B90835557C73C /* URLSessionTests.swift */,
 			);
 			name = ProxyceptLoggingTests;
@@ -184,6 +187,7 @@
 			files = (
 				B733C8A7A892E0D45A27A519 /* ConcurrencyTests.swift in Sources */,
 				2C66E60F4506F845BAFE1C01 /* LoggerTests.swift in Sources */,
+				7A1C3E5F0B2D4F6081A3C5E7 /* RequestTaggingTests.swift in Sources */,
 				048C82464143F1E1C788F03F /* URLSessionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

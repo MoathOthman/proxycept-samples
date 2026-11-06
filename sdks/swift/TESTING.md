@@ -76,6 +76,14 @@ SWIFTPM_MODULECACHE_OVERRIDE=/private/tmp/proxycept-swift-module-cache \
 swift test --disable-sandbox --scratch-path /private/tmp/proxycept-swift-root-build
 ```
 
+## Request-tagging follow-up
+
+Validated on 2026-11-06 with the same toolchain: `swift test` passed **39 tests,
+0 failures** (7 new in `RequestTaggingTests.swift`); the strict-concurrency
+`swift build` passed; generic iOS Simulator `build-for-testing` of the demo and
+iOS XCTest bundle succeeded with the new test file added to the checked-in Xcode
+project. No simulator was booted, installed or launched.
+
 ## Exact test inventory
 
 ### ConcurrencyTests.swift (4)
@@ -119,3 +127,12 @@ swift test --disable-sandbox --scratch-path /private/tmp/proxycept-swift-root-bu
 - `testRealSessionDoesNotFollowRedirect`
 - `testRealSessionBoundsResponseMemory`
 
+### RequestTaggingTests.swift (7)
+
+- `testHeaderNameIsExact`
+- `testGeneratesUUIDWhenNoneAndSetsHeader`
+- `testReusesExistingValidHeaderCaseInsensitively`
+- `testExplicitIdHonoredAndOverridesExistingHeader`
+- `testInvalidExplicitIdIsNeverSentAndFreshUUIDReturned`
+- `testInvalidExistingHeaderIsReplaced`
+- `testReturnedIdRoundTripsIntoLogCorrelation`
