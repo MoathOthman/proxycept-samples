@@ -3,8 +3,8 @@
 Small, dependency-free Swift Package for explicit application logs. iOS 15+,
 macOS 12+, Swift 5.9+. Public SDK source, examples and tests in this directory
 are independently authored and MIT licensed; no private application code or
-history is included. No automatic instrumentation, swizzling, VPN, header
-injection, or implicit collection of request/response bodies.
+history is included. No automatic instrumentation, swizzling, VPN, automatic
+header injection, or implicit collection of request/response bodies.
 
 After the root package facade PR is merged, add the public repository Git URL
 in Xcode or SwiftPM and link the `ProxyceptLogging` product. The root `Package.swift`
@@ -65,6 +65,34 @@ different metadata is delivered in separate batches. Event UUIDs and increasing
 nonnegative sequences survive replay. A corrupt/deleted spool resets its sequence
 and generated installation identifier. Explicitly deleting or purging a queue may
 lose events; server acknowledgement is the delivery boundary.
+
+## Link logs to captured requests
+
+To see which logs belong to an API call in Proxycept's Capture view, tag the
+request and log with the returned ID. Proxycept links a captured request carrying
+`X-Proxycept-Correlation-ID` (`ProxyceptLogger.correlationHeader`) to events with
+the same `correlationId`:
+
+```swift
+var request = URLRequest(url: URL(string: "https://api.example.com/orders")!)
+let id = ProxyceptLogger.tag(&request) // or tag(&request, correlationId: "order-42")
+let (_, response) = try await URLSession.shared.data(for: request)
+logger.log(level: .info, category: "orders", message: "Orders loaded",
+    attributes: ["status": .number(Double((response as? HTTPURLResponse)?.statusCode ?? 0))],
+    correlationId: id)
+```
+
+`tag` uses a valid explicit ID, else a valid existing header on the request, else
+a fresh UUID. Valid IDs are 1–128 visible ASCII characters (no spaces, control
+characters, CR or LF), checked with `ProxyceptLogger.isValidCorrelationId`. It
+never traps or throws: an invalid ID is not sent and a fresh UUID replaces it,
+so always log with the returned value. Prefer opaque IDs; log redaction applies
+to correlation IDs too, so a secret-looking ID would not match its header.
+
+This is opt-in and manual: only requests you pass to `tag` change. There is no
+URLProtocol, swizzling or global interception. Tag only requests to endpoints
+your app controls. Never tag signed requests (for example AWS SigV4 or HMAC) or
+third-party requests: an added header can break the signature or leak the ID.
 
 ## Lifecycle and delivery
 

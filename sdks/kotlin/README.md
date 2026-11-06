@@ -98,6 +98,38 @@ instances return false. Worker storage failures increment `storageFailures`; the
 change the return value of `log`. The bounded memory queue is retained and
 persistence retries on the next scheduled tick, log, or flush, before delivery.
 
+## Link logs to captured requests
+
+To see which logs belong to an API call in Proxycept's Capture view, tag the
+request and log with the returned ID. Proxycept links a captured request carrying
+`X-Proxycept-Correlation-ID` (`ProxyceptLogger.CORRELATION_HEADER`) to events with
+the same `correlationId`:
+
+```kotlin
+val connection = URL("https://api.example.com/orders").openConnection() as HttpURLConnection
+val id = ProxyceptLogger.tag(connection) // before connect(); or tag(connection, "order-42")
+val status = connection.responseCode
+logger.log(Level.INFO, "orders", "Orders loaded", mapOf("status" to status), correlationId = id)
+
+// OkHttp/Retrofit/Ktor, no extra dependency: tag a header map, then copy it.
+val headers = mutableMapOf<String, String>()
+val okId = ProxyceptLogger.tagHeaders(headers)
+val request = Request.Builder().url(url).apply { headers.forEach { (k, v) -> header(k, v) } }.build()
+```
+
+`tag`/`tagHeaders` use a valid explicit ID, else a valid existing header
+(case-insensitive), else a fresh UUID. Valid IDs are 1–128 visible ASCII
+characters (no spaces, control characters, CR or LF), checked with
+`ProxyceptLogger.isValidCorrelationId`. They never throw for a bad ID: an invalid
+ID is not sent and a fresh UUID replaces it, so always log with the returned
+value. `HttpURLConnection` itself throws if headers are changed after connecting.
+Prefer opaque IDs; log redaction applies to correlation IDs too.
+
+This is opt-in and manual: only requests you pass in change. There is no
+interceptor or global hook. Tag only requests to endpoints your app controls.
+Never tag signed requests (for example AWS SigV4 or HMAC) or third-party
+requests: an added header can break the signature or leak the ID.
+
 ## Delivery, limits, and privacy
 
 * POST `/api/logs/ingest`, Bearer ingest credential, uncompressed JSON. Platform
@@ -170,7 +202,8 @@ ack/deduplication, offline jitter/backoff, Retry-After, authentication suspensio
 413, expiry/disable/close, concurrent logging, async flush, directory locks,
 blocked/failing storage without caller stalls, bounded concurrent enqueue,
 ordered disable/reconfigure snapshots, acknowledgement-write races, and close barriers,
-URL/token rejection, and real POST/redirect credential protection. HTML report:
+URL/token rejection, real POST/redirect credential protection, and opt-in
+request tagging (header name, ID reuse/generation, invalid-ID replacement). HTML report:
 `build/reports/tests/test/index.html`; JAR: `build/libs/proxycept-logging-0.1.0.jar`.
 
 ## Isolated Android demo and instrumentation
