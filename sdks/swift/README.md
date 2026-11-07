@@ -6,7 +6,7 @@ are independently authored and MIT licensed; no private application code or
 history is included. No automatic instrumentation, swizzling, VPN, automatic
 header injection, or implicit collection of request/response bodies.
 
-After the root package facade PR is merged, add the public repository Git URL
+Add the public repository Git URL
 in Xcode or SwiftPM and link the `ProxyceptLogging` product. The root `Package.swift`
 exposes the sources and tests in `sdks/swift`; use a revision containing that facade.
 Adding `sdks/swift` as a local Swift Package remains supported.

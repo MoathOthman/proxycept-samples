@@ -1,0 +1,24 @@
+.dart_tool/
+.packages
+build/
+.flutter-plugins-dependencies
+pubspec.lock
+example/ios/Pods/
+example/ios/.symlinks/
+example/ios/Flutter/ephemeral/
+example/android/.gradle/
+example/android/local.properties
+
+# Source-only Flutter example metadata; root ignores whole *.xcodeproj trees.
+!example/pubspec.lock
+!example/ios/Runner.xcodeproj/
+example/ios/Runner.xcodeproj/*
+!example/ios/Runner.xcodeproj/project.pbxproj
+!example/ios/Runner.xcodeproj/project.xcworkspace/
+example/ios/Runner.xcodeproj/project.xcworkspace/*
+!example/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+!example/ios/Runner.xcodeproj/xcshareddata/
+example/ios/Runner.xcodeproj/xcshareddata/*
+!example/ios/Runner.xcodeproj/xcshareddata/xcschemes/
+example/ios/Runner.xcodeproj/xcshareddata/xcschemes/*
+!example/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme

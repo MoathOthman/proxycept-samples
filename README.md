@@ -1,6 +1,6 @@
 # Proxycept client samples
 
-## Application logging SDKs: Swift and Kotlin
+## Application logging SDKs
 
 New source SDKs send categorized **application logs** to a compatible Proxycept app-log
 API. This is separate from the proxy/network samples below: **no VPN, CA certificate or
@@ -9,19 +9,22 @@ it cannot read another app's console output.
 
 | SDK | Integration | Guide |
 | --- | --- | --- |
-| Swift / iOS | Swift Package Manager; repository-root package or `sdks/swift` locally | [Swift SDK](sdks/swift/README.md) |
-| Kotlin / Android | Gradle source module, Android app-private storage | [Kotlin SDK](sdks/kotlin/README.md) |
+| Swift / iOS | Swift Package Manager or local package | [Swift SDK](sdks/swift/README.md) |
+| Kotlin / Android | Gradle source module | [Kotlin SDK](sdks/kotlin/README.md) |
+| React Native (source preview) | Local npm package plus native linking | [React Native SDK](sdks/react-native/README.md) |
+| Flutter (source preview) | Local path plugin | [Flutter SDK](sdks/flutter/README.md) |
+| Kotlin Multiplatform (source preview) | Gradle source module / Apple framework | [KMP SDK](sdks/kotlin-multiplatform/README.md) |
 
-Use a dedicated **ingestion-only** key, never a personal read/write API token. Both SDKs
+Use a dedicated **ingestion-only** key, never a personal read/write API token. All SDKs
 batch asynchronously, bound their offline queues and redact known sensitive patterns
 before spooling. Redaction is defense-in-depth, not a guarantee that arbitrary log text
 contains no personal data. Collect only what is necessary and enable release-build logging
 explicitly. Each SDK folder has its own MIT license; this does not relicense older samples.
 
-**Preview availability:** the logging server feature is default-off and developed/tested
-locally. This source addition does not enable it on hosted production, publish a Maven
-artifact or establish a released Swift package version. Use a locally enabled server and
-follow the respective README for test commands and known platform limits.
+**Availability:** hosted App Logs requires a paid plan; self-hosted collection is
+opt-in. These are source integrations, with no npm, pub.dev or Maven publication
+claimed. See [source release instructions and verification](SOURCE-RELEASE.md)
+and each SDK's README for setup, test commands and supported toolchains.
 
 ---
 

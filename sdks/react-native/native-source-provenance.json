@@ -1,0 +1,39 @@
+{
+  "publicRepository": "https://github.com/MoathOthman/proxycept-samples",
+  "baseRevision": "b4f928f40a2269594fb7f2a52e06764342706798",
+  "upstreamSHA256": {
+    "sdks/swift/Sources/ProxyceptLogging/Transport.swift": "345b1068c35d5f432a7ac9413d5e184cdfddc6a90465ba0de1ccc8ab813ef46e",
+    "sdks/swift/Sources/ProxyceptLogging/Redaction.swift": "3ae55dd2a37ca9373e9407e4f3afc2623187b2b23fe5dd1418b3b7eb5c09eaeb",
+    "sdks/swift/Sources/ProxyceptLogging/Logger.swift": "447291b339bcaa59dcc6682a3de65f76607766997ad92727a99aad705ab0710a",
+    "sdks/swift/Sources/ProxyceptLogging/Models.swift": "b681dcbb1e08b6f09ff362be899294f1bb9b78e3c958806554945438687508f9",
+    "sdks/kotlin/src/main/kotlin/com/proxycept/logging/Wire.kt": "95a73af3f281dc7200c7126734a4026a05ed8602ee5dddeeb64c7d3e75157579",
+    "sdks/kotlin/src/main/kotlin/com/proxycept/logging/Transport.kt": "afa41f70e0e5e30c32f9919b7e24b5ddad3b8185766031be8e4bbb72ad51ad3f",
+    "sdks/kotlin/src/main/kotlin/com/proxycept/logging/ProxyceptLogger.kt": "4c730b4b67fca7f739478a8201ce9cefda322cc79630dfedbf55a9ce27e35ec4",
+    "sdks/kotlin/src/main/kotlin/com/proxycept/logging/Spool.kt": "9982093839b1ce5c5219b4f560cd9ca60b3e85fff3b90b11b947671808d23352",
+    "sdks/kotlin/src/main/kotlin/com/proxycept/logging/RequestTagging.kt": "cfa76ca16a8ebacd3692d84419f1813a28eb11060a84c4c752054673df9f61b4",
+    "sdks/swift/Sources/ProxyceptLogging/RequestTagging.swift": "b5b8432e82f7dbea2ddfb34b9af07a56bd16d0984fb2b50f82e22dcf11d3ed31"
+  },
+  "localAdaptations": [
+    "Swift Transport.swift: remove hostname localhost from HTTP loopback exception; numeric loopback only.",
+    "Android core namespace is com.proxycept.reactnative.core to avoid duplicate upstream classes.",
+    "Android ProxyceptLogger.kt: foreground timer control and optional explicit installation/debug-session metadata, redacted before spool.",
+    "Android Spool.kt: owner-only directory and file permissions in addition to Android noBackupFilesDir location.",
+    "Native bridge controllers are independent adapter source; they validate all scalar attributes before engine admission.",
+    "Existing engine tests are copied from public MIT SDKs; Swift URL test adapted for numeric-loopback-only policy.",
+    "Correlation blocker follow-up: reject non-null empty/overlength correlation IDs in RN admission, Swift/Kotlin core construction and recovery; Android wire requires a JSON string or null and preserves Unicode scalar boundaries. The copied Kotlin limits test now supplies an in-range correlation ID.",
+    "Swift close follow-up: serialized deterministic fd release before close returns, idempotent fd sentinel, separate in-flight close waiters, and no persistence after ownership release; retained-client reopen and stale-writer regression."
+  ],
+  "bundledSHA256": {
+    "ios/Core/Transport.swift": "5424d9a46f458e33062dd7359a8fba34c303b4a895fd954abf18f7fdb47b68d9",
+    "ios/Core/Redaction.swift": "3ae55dd2a37ca9373e9407e4f3afc2623187b2b23fe5dd1418b3b7eb5c09eaeb",
+    "ios/Core/Logger.swift": "1cf613c7ca2752b181ff1fce158ee4094d90cb4844dfb3867e8d3d88ed59a475",
+    "ios/Core/Models.swift": "b681dcbb1e08b6f09ff362be899294f1bb9b78e3c958806554945438687508f9",
+    "android/src/main/java/com/proxycept/reactnative/core/Wire.kt": "0cf2d8b268f573691f2ee6d1ad4fcbd8b8f382f5218f6e924f79f5f956ad76e5",
+    "android/src/main/java/com/proxycept/reactnative/core/Transport.kt": "e44972e841e5cabdcd23a4156444e884336f2994a5feb17504094385f3253370",
+    "android/src/main/java/com/proxycept/reactnative/core/ProxyceptLogger.kt": "e248218d80b06654aa942fc3e645f4ce095fc1dfc768fec5c175aeb41a15cc44",
+    "android/src/main/java/com/proxycept/reactnative/core/Spool.kt": "d91968050843c9716ca3b6fad1889c302557b1f7401cd36721042de41b470739",
+    "android/src/main/java/com/proxycept/reactnative/core/RequestTagging.kt": "c73194539337e5de1de61944ee95f03e8e07afdcc75b3c3696e9a52862b3027f",
+    "ios/Core/RequestTagging.swift": "b5b8432e82f7dbea2ddfb34b9af07a56bd16d0984fb2b50f82e22dcf11d3ed31"
+  },
+  "releaseIntegrationNote": "Reviewed upstream opt-in request-tagging helpers added since the original source snapshot and ported them, with their tests, into the bundled native cores. No JavaScript auto-tagging or implicit header injection is introduced."
+}

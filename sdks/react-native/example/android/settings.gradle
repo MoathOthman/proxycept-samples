@@ -1,0 +1,17 @@
+pluginManagement {
+    includeBuild('../../node_modules/@react-native/gradle-plugin')
+    repositories { google(); mavenCentral(); gradlePluginPortal() }
+}
+plugins { id 'com.facebook.react.settings' }
+rootProject.name = 'ProxyceptRNRuntimeExample'
+include ':app', ':proxycept-logging'
+project(':proxycept-logging').projectDir = file('../../android')
+includeBuild('../../node_modules/@react-native/gradle-plugin')
+// No CLI discovery or extra packages are needed: this host explicitly registers
+// the logging package. RN still generates its real entrypoint/C++ package list.
+def model = groovy.json.JsonOutput.toJson([
+    dependencies: [:], project: [android: [packageName: 'com.proxycept.reactnative.example']]
+])
+def config = file('build/generated/autolinking/autolinking.json')
+config.parentFile.mkdirs()
+if (!config.exists() || config.text != model) config.text = model

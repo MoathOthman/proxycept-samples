@@ -3,6 +3,12 @@
 **/.swiftpm/
 **/xcuserdata/
 **/*.xcuserstate
+**/node_modules/
+**/.dart_tool/
+**/.flutter-plugins*
+**/Pods/
+**/.kotlin/
+**/*.log
 **/build/
 **/.gradle/
 **/local.properties

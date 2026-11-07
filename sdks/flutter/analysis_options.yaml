@@ -1,0 +1,13 @@
+analyzer:
+  errors:
+    unawaited_futures: warning
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+linter:
+  rules:
+    - avoid_print
+    - unawaited_futures
+    - cancel_subscriptions
+    - close_sinks
