@@ -435,4 +435,39 @@ class ProxyceptLogger internal constructor(
         }
         if (Thread.currentThread() !== workerThread) closeFinished.await()
     }
+    /**
+     * Opt-in request tagging (see README "Link logs to captured requests"). Nothing is automatic:
+     * only requests the app passes here are tagged. Tag only requests to endpoints your app
+     * controls; never signed (AWS SigV4/HMAC) or third-party requests whose signatures would break.
+     * Invalid IDs never throw and are never sent: a fresh UUID replaces them, so always log with
+     * the returned value. Valid IDs are 1-128 visible ASCII characters (no spaces/control/CR/LF).
+     */
+    companion object {
+        /** Header Proxycept reads to link a captured request to app logs with the same correlationId. */
+        const val CORRELATION_HEADER = RequestTagging.CORRELATION_HEADER
+
+        /** True when [value] can be sent as a correlation header and logged unchanged. */
+        @JvmStatic
+        fun isValidCorrelationId(value: String?): Boolean = RequestTagging.isValidCorrelationId(value)
+
+        /**
+         * Sets [CORRELATION_HEADER] on an unconnected [connection] and returns the value.
+         * Uses a valid explicit [correlationId], else a valid existing header, else a fresh UUID.
+         * Call before connect()/getOutputStream(); HttpURLConnection rejects header changes afterwards.
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun tag(connection: java.net.HttpURLConnection, correlationId: String? = null): String =
+            RequestTagging.tag(connection, correlationId)
+
+        /**
+         * Same rule for a mutable header map, for OkHttp/Retrofit/Ktor or any client without an
+         * SDK dependency: copy the map into your request builder. Existing keys are matched
+         * case-insensitively and replaced by a single [CORRELATION_HEADER] entry.
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun tagHeaders(headers: MutableMap<String, String>, correlationId: String? = null): String =
+            RequestTagging.tagHeaders(headers, correlationId)
+    }
 }
