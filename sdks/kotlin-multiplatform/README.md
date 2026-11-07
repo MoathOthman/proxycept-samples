@@ -209,12 +209,12 @@ Run from this folder with Gradle **8.13**, JDK 17, Android SDK 35, and Xcode 26.
 To keep caches in this module (no global installation):
 
 ```sh
-export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-export ANDROID_HOME=/Users/moathaliwat/Library/Android/sdk
+export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
 export GRADLE_USER_HOME="$PWD/.gradle-user-home"
 export KONAN_DATA_DIR="$PWD/.konan"
 # Use installed Gradle 8.13, not system Gradle 9.5.1:
-GRADLE=/Users/moathaliwat/.gradle/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/bin/gradle
+GRADLE=gradle  # Gradle 8.13 (no wrapper is checked in)
 "$GRADLE" --no-daemon jvmTest assembleDebug lintDebug \
   linkDebugFrameworkIosSimulatorArm64 linkDebugFrameworkIosArm64 \
   linkDebugTestIosSimulatorArm64 prepareLocalSmoke
@@ -253,7 +253,7 @@ No credential command-line arguments or token files are accepted/generated.
 Then run:
 
 ```sh
-JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+JAVA_HOME="$(/usr/libexec/java_home -v 17)" \
   sh scripts/local-smoke.sh
 ```
 

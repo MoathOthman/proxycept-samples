@@ -102,13 +102,13 @@ swift build --disable-sandbox --package-path sdks/react-native/ios \
   --scratch-path sdks/react-native/.build/swift-strict \
   -Xswiftc -strict-concurrency=complete -Xswiftc -warnings-as-errors
 
-JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+JAVA_HOME="$(/usr/libexec/java_home -v 17)" \
 GRADLE_USER_HOME=/private/tmp/proxycept-kotlin-gradle \
-/Users/moathaliwat/.gradle/wrapper/dists/gradle-8.11.1-bin/bpt9gzteqjrbo1mjrsomdt32c/gradle-8.11.1/bin/gradle \
+gradle \
   -p sdks/react-native/android/jvm --offline --no-daemon test
 
-JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
-ANDROID_HOME=/Users/moathaliwat/Library/Android/sdk \
+JAVA_HOME="$(/usr/libexec/java_home -v 17)" \
+ANDROID_HOME="$HOME/Library/Android/sdk" \
 GRADLE_USER_HOME=/private/tmp/proxycept-kotlin-gradle \
 /path/to/gradle-8.13/bin/gradle \
   -p sdks/react-native/example/android --no-daemon :app:assembleDebug
